@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Map from '../Map'
 import DragSortableList from 'react-drag-sortable'
+import {removePlaceMark, setPlaceMarks} from '../api'
 
 
 import './index.scss'
@@ -25,24 +26,38 @@ export class Form extends Component {
 
 
     handleKeyDown = e => {
-        if (e.keyCode === 13) {
-            const {addressInput, address} = this.state;
-            const newAddress = {
-                text: addressInput,
-                id: getAddressId()
+
+        return new Promise((resolve) => {
+            if (e.keyCode === 13) {
+                const {addressInput, address} = this.state;
+                const newAddress = {
+                    text: addressInput,
+                    id: getAddressId()
+                }
+
+
+                this.setState({
+                    addressInput: "",
+                    address: [...address, newAddress]
+                })
+                resolve()
             }
 
-            this.setState({
-                addressInput: "",
-                address: [...address, newAddress]
-            })
 
-        }
+        }).then(() => {
+            let lastAddr = this.state.address.slice(-1)
+            setPlaceMarks(lastAddr[0].text, lastAddr[0].id)
+        })
+
+
     }
 
     handleRemove = (e) => {
         let elId = e.target.previousElementSibling.getAttribute('id')
         let idInt = parseInt(elId)
+        // console.log(idInt)
+        removePlaceMark(idInt)
+
         this.setState(state => ({
                 address: state.address.filter(
                     item => {
@@ -51,6 +66,7 @@ export class Form extends Component {
                 )
             }
         ))
+
 
     }
 
@@ -103,7 +119,6 @@ export class Form extends Component {
                     </div>
 
                     <ul className='address-list'>
-                        {console.log(this.renderList())}
                         <DragSortableList
                             items={this.renderList()}
                             moveTransitionDuration={0.3}
