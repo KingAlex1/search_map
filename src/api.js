@@ -5,6 +5,9 @@ ymaps.ready(init);
 
 let myMap;
 let placemarkArray = [];
+let ploliLineArray = []
+let coordArr = []
+let myPolyline;
 
 export function geocode(address) {
     return ymaps.geocode(address).then(result => {
@@ -32,14 +35,6 @@ export function setPlaceMarks(address, id) {
                 coords = firstGeoObject.geometry.getCoordinates(),
                 bounds = firstGeoObject.properties.get('boundedBy');
 
-
-            placemarkArray.push({
-                placemark: firstGeoObject,
-                id: id
-            })
-            console.log(placemarkArray.placemark, placemarkArray.id)
-
-            console.log(placemarkArray)
             firstGeoObject.options.set('preset', 'islands#darkBlueDotIconWithCaption');
             firstGeoObject.properties.set('iconCaption', firstGeoObject.getAddressLine())
             myMap.geoObjects.add(firstGeoObject);
@@ -48,18 +43,79 @@ export function setPlaceMarks(address, id) {
                 checkZoomRange: true
             });
 
+            placemarkArray.push({
+                placemark: firstGeoObject,
+                id: id,
+                coords: coords
+            })
+
+            return id
         }
-    )
+    ).then((id) => addPoliline(id))
 
 }
 
-export function removePlaceMark(id) {
-    // console.log(id)
-    let removePlacemark = placemarkArray.filter((item) => item.id === id)
-    console.log(removePlacemark[0].id, 'dddd')
-    alert("Прощай " +  removePlacemark[0].placemark._xalEntities.addressLine)
-    myMap.geoObjects.remove(removePlacemark[0].placemark)
 
+function addPoliline(id) {
+    coordArr = placemarkArray.map((el) => {
+        return el.coords
+    })
+
+    myPolyline = new ymaps.Polyline(coordArr, {
+        strokeColor: "#000000",
+        // Ширина линии.
+        strokeWidth: 4,
+        // Коэффициент прозрачности.
+        strokeOpacity: 0.5
+    })
+    if (id) {
+        ploliLineArray.push({
+            poliline: myPolyline,
+            id: id
+
+        })
+    }
+    removePoliline();
+    myMap.geoObjects.add(myPolyline);
+
+
+}
+
+function removePoliline() {
+    ploliLineArray.forEach((el) => {
+        console.log(el.poliline)
+        myMap.geoObjects.remove(el.poliline);
+    })
+
+    myMap.geoObjects.remove(myPolyline);
+
+}
+
+
+export function removePlaceMark(id) {
+    let removePlacemark = placemarkArray.filter((item) => item.id === id)
+    // console.log(removePlacemark[0].id, 'dddd')
+
+    placemarkArray.forEach((el, i) => {
+        if (el.id == id) {
+            console.log(el.id, i)
+            placemarkArray.splice(i, 1)
+        }
+    })
+    coordArr = placemarkArray.map((el) => {
+        return el.coords
+    })
+
+
+    console.log(coordArr)
+    console.log(placemarkArray)
+
+    myMap.geoObjects.remove(removePlacemark[0].placemark)
+    removePoliline()
+    if (placemarkArray.length > 1 ){
+        console.log(placemarkArray.length)
+        addPoliline()
+    }
 
 }
 

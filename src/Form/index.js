@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
 import Map from '../Map'
 import DragSortableList from 'react-drag-sortable'
-import {removePlaceMark, setPlaceMarks} from '../api'
+import {
+    removePlaceMark,
+    setPlaceMarks
+} from '../api'
 
 
 import './index.scss'
@@ -46,7 +49,9 @@ export class Form extends Component {
 
         }).then(() => {
             let lastAddr = this.state.address.slice(-1)
-            setPlaceMarks(lastAddr[0].text, lastAddr[0].id)
+            return setPlaceMarks(lastAddr[0].text, lastAddr[0].id)
+        }).catch((e) => {
+            console.log(e.message)
         })
 
 
