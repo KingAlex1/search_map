@@ -55,10 +55,30 @@ export class Form extends Component {
     }
 
     renderList = () => {
+        const {address, addressInput} = this.state
 
-        let content = [
+        let content = [address.map((el) => (
+            {
+                content: (<li
+                    key={el.id}
+                    className='address-item'
+                >
+                    <div
+                        className='address-text'
+                        id={el.id}>{el.text}</div>
+                    <div
+                        className='address-remove'
+                        onClick={this.handleRemove}
+                    >
+                        &#215;
+                    </div>
+
+
+                </li>)
+            }))
 
         ]
+        return content[0]
 
     }
 
@@ -81,30 +101,15 @@ export class Form extends Component {
 
                         />
                     </div>
-                    <DragSortableList
-                        moveTransitionDuration={0.3}
-                        type="vertical">
-                        <ul className='address-list'>
 
-                            {address.map((el) => (
-                                <li
-                                    key={el.id}
-                                    className='address-item'
-                                >
-                                    <div
-                                        className='address-text'
-                                        id={el.id}>{el.text}</div>
-                                    <div
-                                        className='address-remove'
-                                        onClick={this.handleRemove}
-                                    >
-                                        &#215;
-                                    </div>
+                    <ul className='address-list'>
+                        {console.log(this.renderList())}
+                        <DragSortableList
+                            items={this.renderList()}
+                            moveTransitionDuration={0.3}
+                            type="vertical"/>
+                    </ul>
 
-
-                                </li>))}
-                        </ul>
-                    </DragSortableList>
                 </div>
                 <Map addressArr={address}/>
             </div>
