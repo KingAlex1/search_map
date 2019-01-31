@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Map-router",
+  "name": "Map-router",
   "icons": [
     {
       "src": "favicon.ico",
@@ -12,4 +12,6 @@
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
+
+
 }

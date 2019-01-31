@@ -17,7 +17,6 @@ function getAddressId() {
 }
 
 export class Form extends Component {
-
     state = {
         addressInput: "",
         address: []
@@ -38,7 +37,6 @@ export class Form extends Component {
                     id: getAddressId()
                 }
 
-
                 this.setState({
                     addressInput: "",
                     address: [...address, newAddress]
@@ -47,12 +45,21 @@ export class Form extends Component {
             }
 
 
-        }).then(() => {
-            let lastAddr = this.state.address.slice(-1)
-            return setPlaceMarks(lastAddr[0].text, lastAddr[0].id)
-        }).catch((e) => {
-            console.log(e.message)
         })
+            .then(() => {
+                let lastAddr = this.state.address.slice(-1)
+                return setPlaceMarks(lastAddr[0].text, lastAddr[0].id)
+            })
+            .then((res) => {
+                if (!res) {
+                    this.setState(state => ({
+                        address: state.address.splice(0,  state.address.length-1)
+                    }))
+                }
+            })
+            .catch((e) => {
+                console.log(e.message)
+            })
 
 
     }
@@ -60,7 +67,6 @@ export class Form extends Component {
     handleRemove = (e) => {
         let elId = e.target.previousElementSibling.getAttribute('id')
         let idInt = parseInt(elId)
-        // console.log(idInt)
         removePlaceMark(idInt)
 
         this.setState(state => ({
@@ -71,8 +77,6 @@ export class Form extends Component {
                 )
             }
         ))
-
-
     }
 
     renderList = () => {
@@ -94,13 +98,11 @@ export class Form extends Component {
                         &#215;
                     </div>
 
-
                 </li>)
             }))
 
         ]
         return content[0]
-
     }
 
 
