@@ -19,16 +19,6 @@ let ploliLineArray = []
 let coordArr = []
 let myPolyline;
 
-// export function geocode(address) {
-//     return ymaps.geocode(address).then(result => {
-//         const points = result.geoObjects.toArray()
-//         if (points.length) {
-//
-//             return points[0].geometry.getCoordinates()
-//         }
-//     })
-// }
-
 export function setPlaceMarks(address, id) {
    return ymaps.geocode(address, {results: 1})
         .then(

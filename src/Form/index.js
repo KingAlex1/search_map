@@ -6,7 +6,6 @@ import {
     setPlaceMarks
 } from '../api'
 
-
 import './index.scss'
 
 let id = 0;
@@ -107,7 +106,6 @@ export class Form extends Component {
 
 
     render() {
-
         const {address, addressInput} = this.state
 
         return (
@@ -121,7 +119,6 @@ export class Form extends Component {
                             type="text" name='route'
                             className='input-address'
                             placeholder='Введите адрес'
-
                         />
                     </div>
 
@@ -131,7 +128,6 @@ export class Form extends Component {
                             moveTransitionDuration={0.3}
                             type="vertical"/>
                     </ul>
-
                 </div>
                 <Map addressArr={address}/>
             </div>
